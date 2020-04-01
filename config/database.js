@@ -9,5 +9,5 @@ const pool = mysql.createPool({
     database:'pokemon'
 });
 
-pool.query= util.promisify(pool.query);
+pool.query= util.promisify(pool.query); 
 module.exports = pool; 
