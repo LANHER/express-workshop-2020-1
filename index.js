@@ -1,8 +1,15 @@
+//Dependencies
 const morgan = require('morgan');
 const express= require('express');
 const app = express();
+//Routers
 const pokemon = require('./routes/pokemon');
 const user = require('./routes/user');
+//Middleware
+const auth = require('./middleware/auth');
+const notFoud = require('./middleware/notFound')
+const index = require('./middleware/index');
+
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -16,16 +23,12 @@ app.use(express.urlencoded({extended:true}));
     DELETE - Borrar un recurso
 */
 
-app.get("/",(req, res, next)=>{
-    return res.status(200).json({code: 1, message: "Bienvenido al Pokedex"});
-});
-
+app.get("/", index);
+app.use("/user", user);
+app.use(auth);
 app.use("/pokemon",pokemon);
-app.use("/user",user);
+app.use(notFoud);
 
-app.use((req, res, next)=>{
-    return res.status(404).json({code:404, message:"URL No encontrada"});
-});
 app.listen(process.env.PORT||3000,()=>{
     console.log("Server is Running...");
 });
